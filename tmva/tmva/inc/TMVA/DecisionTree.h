@@ -52,6 +52,7 @@
 
 class TRandom3;
 
+
 namespace TMVA {
 
    class Event;
@@ -77,7 +78,7 @@ namespace TMVA {
                     Bool_t randomisedTree=kFALSE, Int_t useNvars=0, Bool_t usePoissonNvars=kFALSE, 
                     UInt_t nMaxDepth=9999999, 
                     Int_t iSeed=fgRandomSeed, Float_t purityLimit=0.5,
-                    Int_t treeID = 0);
+                    Int_t treeID = 0, Int_t targetNumber = 0);
 
       // copy constructor
       DecisionTree (const DecisionTree &d);
@@ -234,6 +235,8 @@ namespace TMVA {
       Types::EAnalysisType  fAnalysisType;   // kClassification(=0=false) or kRegression(=1=true)
 
       DataSetInfo*  fDataSetInfo;
+
+      Int_t fTargetNumber; // The index of the target using which the model is to be trained in case of multi-target dataset.
 
 
       ClassDef(DecisionTree,0);               // implementation of a Decision Tree

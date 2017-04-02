@@ -138,7 +138,8 @@ TMVA::DecisionTree::DecisionTree():
    fSigClass       (0),
    fTreeID         (0),
    fAnalysisType   (Types::kClassification),
-   fDataSetInfo    (NULL)
+   fDataSetInfo    (NULL),
+   fTargetNumber   (0)
 {
 }
 
@@ -150,7 +151,8 @@ TMVA::DecisionTree::DecisionTree():
 
 TMVA::DecisionTree::DecisionTree( TMVA::SeparationBase *sepType, Float_t minSize, Int_t nCuts, DataSetInfo* dataInfo, UInt_t cls,
                                   Bool_t randomisedTree, Int_t useNvars, Bool_t usePoissonNvars,
-                                  UInt_t nMaxDepth, Int_t iSeed, Float_t purityLimit, Int_t treeID):
+                                  UInt_t nMaxDepth, Int_t iSeed, Float_t purityLimit, Int_t treeID,
+                                  Int_t targetNumber):
    BinaryTree(),
    fNvars          (0),
    fNCuts          (nCuts),
@@ -175,7 +177,8 @@ TMVA::DecisionTree::DecisionTree( TMVA::SeparationBase *sepType, Float_t minSize
    fSigClass       (cls),
    fTreeID         (treeID),
    fAnalysisType   (Types::kClassification),
-   fDataSetInfo    (dataInfo)
+   fDataSetInfo    (dataInfo),
+   fTargetNumber   (targetNumber)
 {
    if (sepType == NULL) { // it is interpreted as a regression tree, where
                           // currently the separation type (simple least square)
@@ -222,7 +225,8 @@ TMVA::DecisionTree::DecisionTree( const DecisionTree &d ):
    fSigClass   (d.fSigClass),
    fTreeID     (d.fTreeID),
    fAnalysisType(d.fAnalysisType),
-   fDataSetInfo    (d.fDataSetInfo)
+   fDataSetInfo    (d.fDataSetInfo),
+   fTargetNumber   (d.fTargetNumber)
 {
    this->SetRoot( new TMVA::DecisionTreeNode ( *((DecisionTreeNode*)(d.GetRoot())) ) );
    this->SetParentTreeInNodes();
@@ -343,7 +347,7 @@ UInt_t TMVA::DecisionTree::BuildTree( const std::vector<const TMVA::Event*> & ev
          bub += orgWeight;
       }
       if ( DoRegression() ) {
-         const Double_t tgt = evt->GetTarget(0);
+         const Double_t tgt = evt->GetTarget(fTargetNumber);
          target +=weight*tgt;
          target2+=weight*tgt*tgt;
       }
